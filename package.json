@@ -1,0 +1,49 @@
+{
+  "name": "focus-lab-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc -b",
+    "preview": "vite preview --host 127.0.0.1",
+    "dev:server": "tsx watch server/index.ts",
+    "typecheck:server": "tsc -p server/tsconfig.json --noEmit",
+    "build:server": "tsc -p server/tsconfig.json",
+    "start:server": "node dist-server/index.js",
+    "check:db": "npm run build:server && node dist-server/scripts/checkDatabase.js",
+    "setup:db": "npm run build:server && node dist-server/scripts/setupDatabase.js",
+    "test:auth": "npm run build:server && node dist-server/scripts/testAuth.js",
+    "seed:content": "npm run build:server && node dist-server/scripts/seedContent.js",
+    "build:all": "npm run build && npm run build:server",
+    "start": "node dist-server/index.js"
+  },
+  "dependencies": {
+    "argon2": "^0.45.1",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "mongodb": "^7.7.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
