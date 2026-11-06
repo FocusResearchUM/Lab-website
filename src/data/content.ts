@@ -24,10 +24,36 @@ export interface Theme {
   description: string;
 }
 export const themes: Theme[] = [
-  { id: 'provenance', name: 'Provenance & forensics', icon: 'provenance', description: 'Understanding system activity and connecting the evidence behind security incidents.' },
-  { id: 'ai', name: 'Robust security & AI', icon: 'ai', description: 'Studying intelligent detection and its resilience to adversarial behaviour.' },
-  { id: 'network', name: 'Network security', icon: 'network', description: 'Investigating security challenges in interconnected and telecommunications systems.' },
-  { id: 'cloud', name: 'Cloud & edge security', icon: 'cloud', description: 'Examining the security of distributed computing infrastructure.' },
+  {
+    "id": "evasion",
+    "name": "Evasion attacks and robust security",
+    "icon": "ai",
+    "description": "Studying evasion attacks and building resilient security systems."
+  },
+  {
+    "id": "network",
+    "name": "Network security",
+    "icon": "network",
+    "description": "Protecting interconnected systems and telecommunications networks."
+  },
+  {
+    "id": "ai",
+    "name": "Machine learning applied to security",
+    "icon": "ai",
+    "description": "Applying machine learning to detect threats and improve security."
+  },
+  {
+    "id": "provenance",
+    "name": "Provenance analysis and forensics",
+    "icon": "provenance",
+    "description": "Connecting system activity and evidence to investigate security incidents."
+  },
+  {
+    "id": "cloud",
+    "name": "Cloud/edge security",
+    "icon": "cloud",
+    "description": "Securing distributed cloud and edge computing infrastructure."
+  }
 ];
 
 export const asset = (file: string) => `${import.meta.env.BASE_URL}assets/${file}`;
@@ -124,7 +150,7 @@ export interface Person {
   id: string;
   name: string;
   role: string;
-  group: 'director' | 'graduate' | 'undergraduate' | 'alumni';
+  group: 'director' | 'graduate' | 'undergraduate' | 'alumni' | 'friends';
   detail?: string;
   /** Optional image path relative to public/assets, e.g. people/magdy.jpg. */
   image?: string;

@@ -122,3 +122,17 @@ pnpm exec vite preview --configLoader native
 ```
 
 These commands still create and serve the normal production build. Vite’s development dependency optimizer may need ordinary read access to the project’s parent directories in a restricted agent sandbox.
+
+## Review updates: Team, research themes, and repositories
+
+Apply the updated collection validation with `npm run setup:db`, then run `npm run seed:content` to insert the five initial research themes. These commands use your configured database; seeding preserves existing records. Restart the backend after deployment.
+
+Sign in directly at /admin (the link is intentionally absent from public navigation). Open **themes** to edit a theme's name and description, then Publish. Changes are shared by the homepage, research page, publication filter, and publication editor. Keep existing theme records when renaming them so publication associations remain intact. Available icon values: ai, network, provenance, cloud. Initial defaults are in src/data/content.ts and server/seed-content.json; once seeded, edit content through Admin. Descriptions are initial editorial copy and can be revised there.
+
+Under **people**, select **Friends of the Lab (Past & Present)** to add members to the new Team section. Existing /people URLs continue to work; the navigation uses /team.
+
+The Repositories page lists unique Code links from published publications. Add or edit a publication's Code link to update it.
+
+The homepage Funding section uses the three images from the original lab homepage, stored as public/assets/funding-1.png through funding-3.png. Its markup is in src/pages/Home.tsx.
+
+The requested replacement favicon and the error mentioned in the review require the missing email images. The existing favicon remains until the intended asset is supplied.

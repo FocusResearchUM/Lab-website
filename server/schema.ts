@@ -49,7 +49,7 @@ export const definitions: Record<string, { validator: Document; indexes: IndexDe
   people: {
     validator: schema([...metadataRequired, 'name', 'role', 'group'], {
       ...metadata, name: text, role: text,
-      group: { enum: ['director', 'graduate', 'undergraduate', 'alumni'] },
+      group: { enum: ['director', 'graduate', 'undergraduate', 'alumni', 'friends'] },
       detail: text, image: text, profileUrl: url,
     }),
     indexes: [
@@ -57,11 +57,12 @@ export const definitions: Record<string, { validator: Document; indexes: IndexDe
       { key: { status: 1, group: 1 }, name: 'published_people_by_group' },
     ],
   },
+  themes: { validator: schema([...metadataRequired, 'name', 'description', 'icon'], { ...metadata, name: text, description: text, icon: { enum: ['ai', 'network', 'provenance', 'cloud'] } }), indexes: [{ key: { id: 1 }, name: 'unique_theme_id', unique: true }] },
   publications: {
     validator: schema([...metadataRequired, 'title', 'authors', 'year', 'venue', 'themes'], {
       ...metadata, title: text, authors: text, venue: text,
       year: { bsonType: ['int', 'long', 'double'], minimum: 1900, maximum: 9999, multipleOf: 1 },
-      themes: { bsonType: 'array', uniqueItems: true, items: { enum: ['provenance', 'ai', 'network', 'cloud'] } },
+      themes: { bsonType: 'array', uniqueItems: true, items: id },
       paperUrl: url, codeUrl: url, projectId: id,
     }),
     indexes: [

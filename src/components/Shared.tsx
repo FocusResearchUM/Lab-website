@@ -1,6 +1,7 @@
+import { ContentStatus, useThemes } from '../data/useContent';
 import { useEffect, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { asset, themes } from '../data/content';
+import { asset } from '../data/content';
 
 export function PageMeta({ title, description }: { title: string; description?: string }) {
   useEffect(() => {
@@ -23,6 +24,9 @@ export function SectionHeading({ title, children }: { title: string; children?: 
 }
 
 export function ResearchThemes({ expanded = false }: { expanded?: boolean }) {
+  const content = useThemes();
+  const themes = content.data;
+  if (content.loading || content.error) return <ContentStatus {...content} />;
   return <div className={`theme-grid ${expanded ? 'theme-grid-expanded' : ''}`}>
     {themes.map(theme => <article className="theme" key={theme.id}>
       <img className="theme-icon" src={asset(`${theme.icon}.png`)} width="76" height="76" alt="" />

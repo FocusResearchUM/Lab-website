@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import Home from './pages/Home';
+import { Repositories } from './pages/Repositories';
 import { Research, ProjectDetail } from './pages/Research';
 import { People } from './pages/People';
 import { Publications } from './pages/Publications';
@@ -13,7 +14,7 @@ export default function App() {
     <Route index element={<Home />} />
     <Route path="research" element={<Research />} />
     <Route path="research/:projectId" element={<ProjectDetail />} />
-    <Route path="people" element={<People />} />
+    <Route path="people" element={<People />} /><Route path="team" element={<People />} /><Route path="repositories" element={<Repositories />} />
     <Route path="publications" element={<Publications />} />
     <Route path="news" element={<News />} />
     <Route path="news/:newsId" element={<NewsDetail />} />

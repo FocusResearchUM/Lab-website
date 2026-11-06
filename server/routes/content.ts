@@ -12,6 +12,7 @@ const definitions = {
     required: ['name', 'role', 'group'],
     optional: ['detail', 'image', 'profileUrl'], sort: { group: 1, name: 1, id: 1 },
   },
+  themes: { required: ['name', 'description', 'icon'], optional: [] as string[], sort: { createdAt: 1, id: 1 } },
   publications: {
     required: ['title', 'authors', 'year', 'venue', 'themes'],
     optional: ['paperUrl', 'codeUrl', 'projectId'], sort: { year: -1, title: 1, id: 1 },
@@ -55,6 +56,24 @@ for (const [name, definition] of Object.entries(definitions)) {
       if (missing.length) {
         res.status(400).json({ error: 'Please fill in the required fields', fields: missing }); return;
       }
+      const invalid: string[] = [];
+      for (const field of [...definition.required, ...definition.optional, 'status']) {
+        if (!Object.hasOwn(body, field) || (definition.optional.includes(field) && isEmpty(body[field]))) continue;
+        const value = body[field];
+        if (field === 'year') {
+          if (!Number.isInteger(value) || value < 1900 || value > 9999) invalid.push('Year must be a whole number between 1900 and 9999.');
+        } else if (field === 'themes' || field === 'paragraphs') {
+          if (!Array.isArray(value) || value.some(item => typeof item !== 'string' || !item.trim())) invalid.push(field + ' must contain nonempty text values.');
+          else if (field === 'themes' && (new Set(value).size !== value.length || value.some(item => !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item)))) invalid.push('Select valid, distinct research themes.');
+        } else if (typeof value !== 'string') invalid.push(field + ' must be text.');
+        else if (field.endsWith('Url') && !/^https?:\/\//.test(value.trim())) invalid.push(field + ' must start with https:// or http://.');
+        else if (['projectId', 'publicationId'].includes(field) && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.trim())) invalid.push('Select a valid related record.');
+        else if (field === 'status' && !['draft', 'published'].includes(value)) invalid.push('Select draft or published status.');
+        else if (field === 'group' && !['director', 'graduate', 'undergraduate', 'alumni', 'friends'].includes(value)) invalid.push('Select a valid team group.');
+        else if (field === 'icon' && !['ai', 'network', 'provenance', 'cloud'].includes(value)) invalid.push('Icon must be ai, network, provenance, or cloud.');
+        else if (field === 'date' && !/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) invalid.push('Select a valid month.');
+      }
+      if (invalid.length) { res.status(400).json({ error: invalid.join(' ') }); return; }
       const fields: Document = {};
       const unset: Document = {};
       // Only copy content fields; callers cannot change IDs, timestamps, or MongoDB operators.

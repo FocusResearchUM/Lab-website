@@ -1,6 +1,7 @@
+import { useThemes } from '../data/useContent';
 import { Link, useParams } from 'react-router-dom';
 import { Hero, PageMeta, ResearchThemes, SectionHeading } from '../components/Shared';
-import { projects, themes, type Project } from '../data/content';
+import { projects, type Project } from '../data/content';
 import { useContent, ContentStatus } from '../data/useContent';
 import { NotFound } from './Utility';
 
@@ -25,6 +26,7 @@ function ConceptDiagram({ contexts }: { contexts: boolean }) {
 }
 
 export function ProjectDetail() {
+  const { data: themes } = useThemes();
   const { projectId } = useParams();
   const content = useContent('publications');
   const publications = content.data;

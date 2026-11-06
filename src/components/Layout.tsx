@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Icon } from './Icons';
 import { site } from '../data/content';
 
-const navigation = [['Research', '/research'], ['People', '/people'], ['Publications', '/publications'], ['News', '/news'], ['Join us', '/join'], ['Admin', '/admin']] as const;
+const navigation = [['Research', '/research'], ['Team', '/team'], ['Publications', '/publications'], ['News', '/news'], ['Join us', '/join'], ['Repositories', '/repositories']] as const;
 
 export function Wordmark() {
   return <Link className="brand" to="/" aria-label="FOCUS research lab home">
@@ -33,7 +33,7 @@ export function Layout() {
     document.addEventListener('keydown', escape);
     return () => document.removeEventListener('keydown', escape);
   }, [menuOpen]);
-  return <>
+  return <div className="site-layout">
     <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); main.current?.focus(); }}>Skip to content</a>
     <header className="site-header">
       <div className="container header-inner">
@@ -51,5 +51,5 @@ export function Layout() {
     <footer className="site-footer"><div className="container footer-top"><Wordmark /><nav aria-label="Footer navigation">{navigation.map(([label, path]) => <Link key={path} to={path}>{label}</Link>)}<Link to="/contact">Contact</Link></nav></div>
       <div className="container footer-bottom"><a href={site.universityUrl}>{site.university}</a><span>{site.department} · Winnipeg, Canada</span><span>© {new Date().getFullYear()} FOCUS Lab</span></div>
     </footer>
-  </>;
+  </div>;
 }

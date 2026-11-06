@@ -40,7 +40,7 @@ app.use((_req, res) => res.status(404).send('Page not found'));
 
 const handleError: ErrorRequestHandler = (error, _req, res, _next) => {
   if (error.code === 121) {
-    res.status(400).json({ error: 'The record does not match the existing database schema' }); return;
+    res.status(400).json({ error: 'This entry could not be saved because its fields do not match the database rules. Check the year, links, and research themes. If they are correct, ask the administrator to update the database schema.' }); return;
   }
   if (error.code === 11000) {
     res.status(409).json({ error: 'A record with this unique value already exists' }); return;

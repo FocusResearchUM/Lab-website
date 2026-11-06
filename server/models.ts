@@ -31,7 +31,7 @@ export interface NewsRecord extends ContentMetadata {
 export interface PersonRecord extends ContentMetadata {
   name: string;
   role: string;
-  group: 'director' | 'graduate' | 'undergraduate' | 'alumni';
+  group: 'director' | 'graduate' | 'undergraduate' | 'alumni' | 'friends';
   detail?: string;
   image?: string;
   profileUrl?: string;

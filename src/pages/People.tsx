@@ -13,12 +13,13 @@ function PersonProfile({ person, prominent = false }: { person: Person; prominen
 export function People() {
   const content = useContent('people');
   const people = content.data;
-  if (content.loading || content.error) return <><PageMeta title="People" /><Hero title="People" compact /><ContentStatus {...content} /></>;
-  return <><PageMeta title="People" /><Hero title="People" subtitle="The FOCUS research team." compact />
+  if (content.loading || content.error) return <><PageMeta title="Team" /><Hero title="Team" compact /><ContentStatus {...content} /></>;
+  return <><PageMeta title="Team" /><Hero title="Team" subtitle="The FOCUS research team." compact />
     <div className="container people-page"><section className="people-section"><SectionHeading title="Lab director" />{people.filter(p => p.group === 'director').map(p => <PersonProfile person={p} key={p.id} prominent />)}</section>
       <section className="people-section"><SectionHeading title="Graduate researchers" /><div className="people-grid">{people.filter(p => p.group === 'graduate').map(p => <PersonProfile person={p} key={p.id} />)}</div></section>
       <section className="people-section"><SectionHeading title="Undergraduate researchers" /><div className="people-grid">{people.filter(p => p.group === 'undergraduate').map(p => <PersonProfile person={p} key={p.id} />)}</div></section>
       <section className="people-section alumni-section" id="alumni"><SectionHeading title="Alumni" /><div className="people-grid">{people.filter(p => p.group === 'alumni').map(p => <PersonProfile person={p} key={p.id} />)}</div></section>
+      <section className="people-section" id="friends"><SectionHeading title="Friends of the Lab (Past & Present)" /><div className="people-grid">{people.filter(p => p.group === 'friends').map(p => <PersonProfile person={p} key={p.id} />)}</div></section>
       <div className="people-join"><h2>Interested in joining the team?</h2><Link className="button" to="/join">Research opportunities</Link></div>
     </div>
   </>;

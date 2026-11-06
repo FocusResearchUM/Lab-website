@@ -1,10 +1,12 @@
+import { useThemes } from '../data/useContent';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Hero, PageMeta } from '../components/Shared';
 import { Icon } from '../components/Icons';
-import { site, themes } from '../data/content';
+import { site } from '../data/content';
 import { useContent, ContentStatus } from '../data/useContent';
 
 export function Publications() {
+  const { data: themes } = useThemes();
   const content = useContent('publications');
   const publications = content.data;
   const currentYear = new Date().getFullYear();

@@ -159,5 +159,37 @@
         "cloud"
       ]
     }
+  ],
+  "themes": [
+    {
+      "id": "evasion",
+      "name": "Evasion attacks and robust security",
+      "icon": "ai",
+      "description": "Studying evasion attacks and building resilient security systems."
+    },
+    {
+      "id": "network",
+      "name": "Network security",
+      "icon": "network",
+      "description": "Protecting interconnected systems and telecommunications networks."
+    },
+    {
+      "id": "ai",
+      "name": "Machine learning applied to security",
+      "icon": "ai",
+      "description": "Applying machine learning to detect threats and improve security."
+    },
+    {
+      "id": "provenance",
+      "name": "Provenance analysis and forensics",
+      "icon": "provenance",
+      "description": "Connecting system activity and evidence to investigate security incidents."
+    },
+    {
+      "id": "cloud",
+      "name": "Cloud/edge security",
+      "icon": "cloud",
+      "description": "Securing distributed cloud and edge computing infrastructure."
+    }
   ]
 }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import type { NewsItem, Person, Publication } from './content';
+import type { NewsItem, Person, Publication, Theme } from './content';
 
-type Content = { news: NewsItem; people: Person; publications: Publication };
+type Content = { themes: Theme; news: NewsItem; people: Person; publications: Publication };
 
 export function useContent<K extends keyof Content>(name: K) {
   const [data, setData] = useState<Content[K][]>([]);
@@ -28,3 +28,5 @@ export function useContent<K extends keyof Content>(name: K) {
 export function ContentStatus({ loading, error, retry }: { loading: boolean; error: string; retry: () => void }) {
   return <div className="container section">{loading ? <p role="status">Loading…</p> : error ? <><p role="alert">{error}</p><button className="button" onClick={retry}>Try again</button></> : null}</div>;
 }
+
+export function useThemes() { return useContent('themes'); }

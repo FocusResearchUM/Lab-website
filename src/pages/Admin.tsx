@@ -1,15 +1,17 @@
+import { useThemes } from '../data/useContent';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Wordmark } from '../components/Layout';
 import { PageMeta } from '../components/Shared';
-import { projects, themes } from '../data/content';
+import { projects } from '../data/content';
 import './admin.css';
 
-type Section = 'news' | 'people' | 'publications';
+type Section = 'news' | 'people' | 'publications' | 'themes';
 type RecordData = Record<string, string | number | string[]> & { id: string; status: string };
 type Session = { admin: { email: string }; csrfToken: string };
 type Field = { key: string; label: string; required?: boolean; type?: string };
 const fields: Record<Section, Field[]> = {
+  themes: [{ key: 'name', label: 'Name', required: true }, { key: 'description', label: 'Description', type: 'textarea', required: true }, { key: 'icon', label: 'Icon (ai, network, provenance, or cloud)', required: true }],
   news: [{ key: 'title', label: 'Title', required: true }, { key: 'date', label: 'Month', type: 'month', required: true }, { key: 'summary', label: 'Summary', type: 'textarea', required: true }, { key: 'paragraphs', label: 'Article text', type: 'textarea', required: true }, { key: 'sourceUrl', label: 'Source link', required: true }, { key: 'publicationId', label: 'Related publication', type: 'publication' }],
   people: [{ key: 'name', label: 'Name', required: true }, { key: 'role', label: 'Role', required: true }, { key: 'group', label: 'Group', type: 'group', required: true }, { key: 'detail', label: 'Details' }, { key: 'profileUrl', label: 'Profile link' }, { key: 'image', label: 'Photo path (optional)' }],
   publications: [{ key: 'title', label: 'Title', required: true }, { key: 'authors', label: 'Authors', required: true }, { key: 'year', label: 'Year', type: 'number', required: true }, { key: 'venue', label: 'Venue', required: true }, { key: 'themes', label: 'Research themes', type: 'themes', required: true }, { key: 'paperUrl', label: 'Paper link' }, { key: 'codeUrl', label: 'Code link' }, { key: 'projectId', label: 'Related project', type: 'project' }],
@@ -29,6 +31,7 @@ async function api<T>(path: string, method = 'GET', body?: unknown, csrfToken?: 
 }
 
 export function Admin() {
+  const { data: themes, retry: refreshThemes } = useThemes();
   const [session, setSession] = useState<Session | null>(null);
   const [checking, setChecking] = useState(true);
   const [email, setEmail] = useState('');
@@ -83,6 +86,7 @@ export function Admin() {
         field.key === 'paragraphs' && Array.isArray(value) ? value.join('\n\n') : String(value ?? '');
     }
     if (!record) {
+      if (section === 'themes') next.icon = 'ai';
       if (section === 'people') next.group = 'graduate';
       if (section === 'publications') next.year = String(new Date().getFullYear());
     }
@@ -99,7 +103,7 @@ export function Admin() {
     setBusy(true); setError('');
     try {
       await api(`/admin/${section}${editing ? `/${editing}` : ''}`, editing ? 'PATCH' : 'POST', body, session.csrfToken);
-      setEditing(undefined); setPreview(false); setNotice(status === 'published' ? 'Published successfully.' : 'Draft saved.');
+      refreshThemes(); setEditing(undefined); setPreview(false); setNotice(status === 'published' ? 'Published successfully.' : 'Draft saved.');
       setRecords(await api<RecordData[]>(`/admin/${section}`));
     } catch (error) { report(error); }
     finally { setBusy(false); }
@@ -109,7 +113,7 @@ export function Admin() {
     setBusy(true); setError('');
     try {
       await api(`/admin/${section}/${deleting.id}`, 'DELETE', undefined, session.csrfToken);
-      setRecords(items => items.filter(item => item.id !== deleting.id)); setDeleting(null); setNotice('Record deleted.');
+      refreshThemes(); setRecords(items => items.filter(item => item.id !== deleting.id)); setDeleting(null); setNotice('Record deleted.');
     } catch (error) { report(error); }
     finally { setBusy(false); }
   }
@@ -132,9 +136,9 @@ export function Admin() {
         <button className="button" disabled={busy}>{busy ? 'Logging in…' : 'Log in'}</button>
       </form> : <>
         <div className="admin-title"><div><span className="eyebrow">Content dashboard</span><h1>Manage the lab</h1><p>{session.admin.email}</p></div></div>
-        <nav className="admin-tabs" aria-label="Content sections">{(['news', 'people', 'publications'] as Section[]).map(name => <button key={name} aria-current={section === name ? 'page' : undefined} disabled={busy} onClick={() => { setSection(name); setEditing(undefined); setDeleting(null); setPreview(false); setError(''); setNotice(''); }}>{name}</button>)}</nav>
+        <nav className="admin-tabs" aria-label="Content sections">{(['news', 'people', 'publications', 'themes'] as Section[]).map(name => <button key={name} aria-current={section === name ? 'page' : undefined} disabled={busy} onClick={() => { setSection(name); setEditing(undefined); setDeleting(null); setPreview(false); setError(''); setNotice(''); }}>{name}</button>)}</nav>
         {editing === undefined ? <>
-          <div className="admin-list-heading"><h2>{section}</h2><button className="button" disabled={busy || loading} onClick={() => edit()}>Add {section === 'people' ? 'person' : section === 'news' ? 'news' : 'publication'}</button></div>
+          <div className="admin-list-heading"><h2>{section}</h2><button className="button" disabled={busy || loading} onClick={() => edit()}>Add {section === 'people' ? 'person' : section === 'news' ? 'news' : section === 'themes' ? 'theme' : 'publication'}</button></div>
           {loading ? <p role="status">Loading records…</p> : records.length === 0 ? <div className="admin-empty">No records yet. Add your first entry above.</div> : <div className="admin-records">{records.map(record => <article key={record.id}><div><h3>{String(record.title ?? record.name)}</h3><span className={`admin-status ${record.status}`}>{record.status}</span></div><div className="admin-actions"><button disabled={busy} onClick={() => edit(record)}>Edit</button><button disabled={busy} onClick={() => setDeleting(record)}>Delete</button></div></article>)}</div>}
           {deleting && <div className="admin-delete" role="alert"><p>Delete “{String(deleting.title ?? deleting.name)}”? This cannot be undone.</p><div className="admin-actions"><button disabled={busy} onClick={remove}>Delete record</button><button disabled={busy} onClick={() => setDeleting(null)}>Cancel</button></div></div>}
         </> : <form className="admin-editor" onSubmit={event => { event.preventDefault(); void save('published'); }}>
@@ -142,7 +146,7 @@ export function Admin() {
           <fieldset disabled={busy} className="admin-fields">{fields[section].map(field => field.type === 'themes' ? <fieldset className="admin-themes" key={field.key}><legend>{field.label} *</legend>{themes.map(theme => <label key={theme.id}><input type="checkbox" checked={(form.themes as string[]).includes(theme.id)} onChange={event => update('themes', event.target.checked ? [...form.themes as string[], theme.id] : (form.themes as string[]).filter(id => id !== theme.id))} />{theme.name}</label>)}</fieldset> : <label key={field.key}>{field.label}{field.required ? ' *' : ''}
             {field.type === 'textarea' ? <textarea rows={field.key === 'paragraphs' ? 9 : 3} required={field.required} value={String(form[field.key] ?? '')} onChange={event => update(field.key, event.target.value)} /> : ['group', 'project', 'publication'].includes(field.type ?? '') ? <select required={field.required} value={String(form[field.key] ?? '')} onChange={event => update(field.key, event.target.value)}>
               {!field.required && <option value="">None</option>}
-              {field.type === 'group' ? ['director', 'graduate', 'undergraduate', 'alumni'].map(group => <option key={group}>{group}</option>) : (field.type === 'project' ? projects.map(project => ({ id: project.id, label: project.name })) : publications.map(paper => ({ id: paper.id, label: String(paper.title) }))).map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
+              {field.type === 'group' ? ['director', 'graduate', 'undergraduate', 'alumni', 'friends'].map(group => <option key={group} value={group}>{group === 'friends' ? 'Friends of the Lab (Past & Present)' : group}</option>) : (field.type === 'project' ? projects.map(project => ({ id: project.id, label: project.name })) : publications.map(paper => ({ id: paper.id, label: String(paper.title) }))).map(item => <option key={item.id} value={item.id}>{item.label}</option>)}
               {form[field.key] && field.type === 'publication' && !publications.some(paper => paper.id === form[field.key]) && <option value={String(form[field.key])}>{String(form[field.key])}</option>}
             </select> : <input type={field.type ?? 'text'} required={field.required} value={String(form[field.key] ?? '')} onChange={event => update(field.key, event.target.value)} />}
             {field.key === 'paragraphs' && <small>Separate paragraphs with a blank line.</small>}

@@ -69,7 +69,14 @@ try {
   })) {
     const invalid = await contentRequest(`/api/admin/${name}`, 'POST', {});
     assert.equal(invalid.status, 400);
-    const created = await contentRequest(`/api/admin/${name}`, 'POST', content);
+    if (name === 'publications') {
+      const badLink = await contentRequest('/api/admin/publications', 'POST', { ...content, paperUrl: 'example.com/paper' });
+      assert.equal(badLink.status, 400);
+      assert.match((await badLink.json() as { error: string }).error, /paperUrl must start/);
+      const badYear = await contentRequest('/api/admin/publications', 'POST', { ...content, year: 2026.5 });
+      assert.equal(badYear.status, 400);
+    }
+    const created = await contentRequest(`/api/admin/${name}`, 'POST', { ...content, ...(name === 'publications' ? { codeUrl: '', projectId: '' } : {}) });
     assert.equal(created.status, 201);
     const record = await created.json() as { id: string; status: string };
     temporaryContent.push({ collection: name, id: record.id });
