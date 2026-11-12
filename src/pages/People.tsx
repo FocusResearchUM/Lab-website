@@ -5,7 +5,7 @@ import { useContent, ContentStatus } from '../data/useContent';
 function initials(name: string) { return name.replace(/^Dr\.\s*/, '').split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join(''); }
 function PersonProfile({ person, prominent = false }: { person: Person; prominent?: boolean }) {
   return <article className={`person ${prominent ? 'person-prominent' : ''}`}>
-    {person.image ? <img className="avatar" src={asset(person.image)} alt={person.name} width="104" height="104" /> : <div className="avatar" aria-hidden="true">{initials(person.name)}</div>}
+    {person.image ? <img className="avatar" src={asset(person.image)} alt={person.name} loading="lazy" width="104" height="104" /> : <div className="avatar" aria-hidden="true">{initials(person.name)}</div>}
     <div><h3>{person.name}</h3><p className="person-role">{person.role}</p>{person.detail && <p className="person-detail">{person.detail}</p>}{person.profileUrl && <a className="text-link" href={person.profileUrl}>Faculty profile</a>}</div>
   </article>;
 }

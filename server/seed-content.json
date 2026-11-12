@@ -55,31 +55,36 @@
       "role": "Lab director",
       "group": "director",
       "detail": "Assistant Professor, University of Manitoba",
-      "profileUrl": "https://azadeht.github.io/"
+      "profileUrl": "https://azadeht.github.io/",
+      "image": "people/azadeh.jpg"
     },
     {
       "id": "magdy",
       "name": "Magdy Nasr",
       "role": "MSc researcher",
-      "group": "graduate"
+      "group": "graduate",
+      "image": "people/magdy.jpg"
     },
     {
       "id": "yousef",
       "name": "Yousef Mahmoud",
       "role": "MSc researcher",
-      "group": "graduate"
+      "group": "graduate",
+      "image": "people/yousef.jpg"
     },
     {
       "id": "neveen",
       "name": "Neveen Ayman",
       "role": "MSc researcher",
-      "group": "graduate"
+      "group": "graduate",
+      "image": "people/neveen.jpg"
     },
     {
       "id": "vansh",
       "name": "Vansh Rastogi",
       "role": "Undergraduate researcher",
-      "group": "undergraduate"
+      "group": "undergraduate",
+      "image": "people/vansh.jpg"
     },
     {
       "id": "sareh",
@@ -92,7 +97,8 @@
       "id": "hrutil",
       "name": "Hrutil Patel",
       "role": "Former undergraduate researcher",
-      "group": "alumni"
+      "group": "alumni",
+      "image": "people/hrutil.jpg"
     },
     {
       "id": "hayley",
